@@ -10,12 +10,7 @@ export default class DiplomacyEmbeds {
         const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setTitle(`Welcome ${username} - Diplomat of ${communityName}`)
-            .setDescription(`One of our diplomats will be with you as soon as possible.${time == null ?  '' : `
-
-Note that it's currently ${time} in the Netherlands, and therefore it might take a while before one of our diplomats are available to help you.`}
-
-In the mean time, you can use this thread to further describe what you would like to discuss, and provide images if necessary. \
-If you have pixel art for us to help build, please validate it using the command ${CommandService.GetCommandString(CommandConstants.SLASH.VALIDATE)}.
+            .setDescription(`One of our diplomats will be with you as soon as possible.
 
 Please __provide proof__ that you are an __official diplomat__ by sending an invite link of your community's Discord server. Alternatively, send a screenshot of your roles that server. If it is not possible for you to provide these things, please explain why.
 
@@ -37,13 +32,13 @@ so make sure you add both at once (if needed). If you don't have any associates,
             .setColor(SettingsConstants.COLORS.DEFAULT)
             .setTitle(communityName)
             .setDescription(`
-**Community grootte**
+**Community size**
 ${size}
             
-**Bericht**
+**Reason**
 ${description}
 
-[Link naar de thread](${threadUrl})
+[Link to the thread](${threadUrl})
 
 ${similarities.result ? this.GetSimilaritiesString(similarities.data.list) : ''}`);
 
@@ -71,13 +66,13 @@ __Do not abuse this.__ The diplomat disagreeing with you is not reason enough to
             .setTitle(communityName)
             .setDescription(`${description}
             
-[Link naar de thread](${threadUrl})`);
+[Link to the thread](${threadUrl})`);
 
         return embed;
     }
 
     private static GetSimilaritiesString(similarities: Array<any>) {
-        let str = `**⚠️ Vergelijkbare ${similarities.length > 1 ? 'diplomaten' : 'diplomaat'}**\n`;
+        let str = `**⚠️ Similar ${similarities.length > 1 ? 'diplomats' : 'diplomat'}**\n`;
 
         for (const similarity of similarities) {
             str += `[${similarity.name}](${similarity.url})\n`;

@@ -5,4 +5,10 @@ export enum RoleType {
     Diplomat = 'diplomat',
     Reporter = 'reporter',
     Support = 'support',
+    sweden = 'sweden',
+    norway = 'norway',
+    denmark = 'denmark',
+    finland = 'finland',
+    iceland = 'iceland',
+    sami = 'sami',
 }

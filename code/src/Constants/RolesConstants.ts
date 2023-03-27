@@ -27,6 +27,30 @@ export default class RolesConstants {
         [RoleType.Support]: {
             name: '👮 Helper',
             description: 'We help stuff, and that\'s pretty dope.',
-        }
+        },
+        [RoleType.sweden]: {
+            name: '🇸🇪 Sweden',
+            description: 'We\'re from Sweden, and that\'s pretty dope.'
+        },
+        [RoleType.norway]: {
+            name: '🇳🇴 Norway',
+            description: 'We\'re from Norway, and that\'s pretty dope.'
+        },
+        [RoleType.denmark]: {
+            name: '🇩🇰 Denmark',
+            description: 'We\'re from Denmark, and that\'s pretty dope.'
+        },
+        [RoleType.finland]: {
+            name: '🇫🇮 Finland',
+            description: 'We\'re from Finland, and that\'s pretty dope.'
+        },
+        [RoleType.iceland]: {
+            name: '🇮🇸 Iceland',
+            description: 'We\'re from Iceland, and that\'s pretty dope.'
+        },
+        [RoleType.sami]: {
+            name: '<:samiflag:1089990859589697607> Sami',
+            description: 'We\'re from Sàpmi, and that\'s pretty dope.'
+        },
     };
 }

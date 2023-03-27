@@ -94,7 +94,7 @@ Deze post wordt om die reden gesloten. Neem contact op met een moderator als dit
             .setDescription(`Deze suggestie is naar de <#${SettingsConstants.CHANNELS.NOMINATION_ID}> gestuurd. Deze wordt zo snel mogelijk afgehandeld.
         ${art ? '\nTot die tijd kan je nog steeds nieuwe art uploaden. Als er meerdere art is geupload, maar er is nog geen duidelijke favoriete versie, \
 dan zal een moderator een keuze maken.' : ''}
-\n[Link naar de nominatie](${url})`);
+\n[Link to the nomination](${url})`);
 
         return embed;
     }

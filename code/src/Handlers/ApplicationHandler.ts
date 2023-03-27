@@ -41,11 +41,11 @@ export default class ApplicationHandler {
                         .addOptions(
                             {
                                 label: 'Soldaat',
-                                value: 'soldaat'
+                                value: 'builder'
                             },
                             {
                                 label: 'Bouwer',
-                                value: 'bouwer'
+                                value: 'builder'
                             },
                         )
                 );
