@@ -29,17 +29,17 @@ export default class OnboardingHandler {
             .addComponents(
                 new StringSelectMenuBuilder()
                     .setCustomId('onboarding_roles')
-                    .setPlaceholder('Selecteer een rol')
+                    .setPlaceholder('Select a role')
                     .setMinValues(1)
                     .setMaxValues(2)
                     .addOptions(
                         {
-                            label: 'Soldaat',
-                            value: 'soldaat'
+                            label: 'Soldier',
+                            value: 'soldier'
                         },
                         {
-                            label: 'Bouwer',
-                            value: 'bouwer'
+                            label: 'Builder',
+                            value: 'builder'
                         },
                     )
             );
@@ -57,7 +57,7 @@ export default class OnboardingHandler {
     public static OnObserver(messageInfo: IMessageInfo) {
         messageInfo.member.roles.add(SettingsConstants.ROLES.OBSERVER_ID);
         (<ChatInputCommandInteraction>messageInfo.interaction).reply({
-            content: 'Kijk gerust even rond.\nFeel free to look around.',
+            content: 'Feel free to look around.',
             ephemeral: true
         });
 
@@ -152,10 +152,10 @@ export default class OnboardingHandler {
 
             for (const role of roles) {
                 switch (role) {
-                    case 'soldaat':
+                    case 'soldier':
                         messageInfo.member.roles.add(SettingsConstants.ROLES.SOLDIER_ID);
                         break;
-                    case 'bouwer':
+                    case 'builder':
                         messageInfo.member.roles.add(SettingsConstants.ROLES.BUILDER_ID);
                         break;
                 }
