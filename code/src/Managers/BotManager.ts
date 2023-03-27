@@ -23,6 +23,7 @@ export default class BotManager {
     public static async OnReady() {
         console.log('Eendragt: Connected');
         await VariableManager.InitializeVariables();
+        CommandManager.UpdateSlashCommands();
         NightsWatchManager.CreateNightCheckInterval();
     }
 

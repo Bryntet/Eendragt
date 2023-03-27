@@ -8,13 +8,8 @@ export default class OnboardingEmbeds {
     public static GetWelcomeEmbed() {
         const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setTitle('PlaceNL')
+            .setTitle('Place Nordics')
             .addFields(
-                {
-                    name: 'Welkom',
-                    value: 'Waarvoor ben je in de server?'
-
-                },
                 {
                     name: 'Welcome',
                     value: 'What brings you to our server?'
@@ -27,8 +22,8 @@ export default class OnboardingEmbeds {
     public static GetPlacerEmbed() {
         const embed = new EmbedBuilder()
             .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setTitle('Fijn dat je komt meehelpen!')
-            .setDescription('Meehelpen kan op de volgende manieren:')
+            .setTitle('Thank you for wanting to help!')
+            .setDescription('I want to help by:')
             .addFields(
                 {
                     name: RolesConstants.ROLES[RoleType.Soldier].name,
@@ -39,8 +34,8 @@ export default class OnboardingEmbeds {
                     value: RolesConstants.ROLES[RoleType.Builder].description,
                 },
                 {
-                    name: 'Nog meer rollen',
-                    value: `Bij PlaceNL zijn we op zoek naar talent! Bekijk <#${SettingsConstants.CHANNELS.MORE_ROLES_ID}> voor nog meer rollen!`,
+                    name: 'There are more roles',
+                    value: `Get more roles over here: <#${SettingsConstants.CHANNELS.MORE_ROLES_ID}>!`,
                 }
             );
         return embed;

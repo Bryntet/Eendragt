@@ -181,20 +181,12 @@ ${roles.length > 1 ? 'en ' : ''}\`${roles[roles.length - 1].toTitleCase()}\` geg
                 .addComponents(
                     new ButtonBuilder()
                         .setCustomId('onboarding_help')
-                        .setLabel('🌷 Ik wil meehelpen!')
+                        .setLabel('🌷 I want to help!')
                         .setStyle(ButtonStyle.Primary),
                     new ButtonBuilder()
                         .setCustomId('onboarding_diplomacy')
                         .setLabel('🤝 I\'m a foreign diplomat')
-                        .setStyle(ButtonStyle.Success),
-                    new ButtonBuilder()
-                        .setCustomId('onboarding_observe')
-                        .setLabel('👀 I\'m here to observe')
-                        .setStyle(ButtonStyle.Danger),
-                    new ButtonBuilder()
-                        .setCustomId('onboarding_development')
-                        .setLabel('🤖 I\'m here for bot development/support')
-                        .setStyle(ButtonStyle.Secondary)
+                        .setStyle(ButtonStyle.Success)
                 );
 
             const interaction = messageInfo.interaction as ChatInputCommandInteraction;
