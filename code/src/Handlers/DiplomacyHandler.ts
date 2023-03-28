@@ -1,4 +1,4 @@
-import { ActionRowBuilder, Attachment, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelType, ChatInputCommandInteraction, ModalBuilder, ModalSubmitInteraction, OverwriteType, PermissionFlagsBits, TextChannel, TextInputBuilder, TextInputStyle, ThreadChannel, UserSelectMenuBuilder, UserSelectMenuInteraction, VoiceState } from 'discord.js';
+import { ActionRowBuilder, Attachment, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelType, ChatInputCommandInteraction, ContextMenuCommandInteraction, ModalBuilder, ModalSubmitInteraction, OverwriteType, PermissionFlagsBits, TextChannel, TextInputBuilder, TextInputStyle, ThreadChannel, UserSelectMenuBuilder, UserSelectMenuInteraction, VoiceState } from 'discord.js';
 import CommandConstants from '../Constants/CommandConstants';
 import RedisConstants from '../Constants/RedisConstants';
 import SettingsConstants from '../Constants/SettingsConstants';
@@ -25,14 +25,18 @@ export default class DiplomacyHandler {
     private static readonly keyCooldown: string = `${RedisConstants.KEYS.PLACENL}${RedisConstants.KEYS.DIPLOMACY}${RedisConstants.KEYS.COOLDOWN}`;
 
     public static OnCommand(messageInfo: IMessageInfo) {
-        const commands = CommandConstants.SLASH;
+        const commandsSlash = CommandConstants.SLASH;
+        const commandsMenu = CommandConstants.MENU;
 
         switch (messageInfo.commandInfo.command) {
-            case commands.VOICE:
+            case commandsSlash.VOICE:
                 this.OnVoiceCommand(messageInfo);
                 break;
-            case commands.TREATY:
+            case commandsSlash.TREATY:
                 this.OnTreaty(messageInfo);
+                break;
+            case commandsMenu.PEEK:
+                this.OnJoin(messageInfo);
                 break;
             default: return false;
         }
@@ -64,7 +68,8 @@ export default class DiplomacyHandler {
                 invitable: false
             });
 
-            const similarities = await SimilarityService.FindSimiliarThreads(thread, this.keyThreads, true);
+            const similarities = await SimilarityService.FindSimiliarThreads(thread, this.keyThreads, true,
+                0, VariableManager.Get(VariableKey.SimilarDiplomacy));
 
             Redis.hset(this.keyThreads, thread.id, thread.name);
 
@@ -101,7 +106,7 @@ export default class DiplomacyHandler {
 
             const diplomacyDispatchChannel = (await DiscordService.FindChannelById(SettingsConstants.CHANNELS.DIPLOMACY_DISPATCH_ID)) as TextChannel;
             await diplomacyDispatchChannel.send({
-                embeds: [DiplomacyEmbeds.GetDispatchEmbed(name, size, description, thread.url, similarities)],
+                embeds: [DiplomacyEmbeds.GetDispatchEmbed(name, size, description, message.url, similarities)],
                 components: [actionRow]
             });
             LogService.Log(LogType.OnboardingDiplomat, messageInfo.user.id, 'Thread', thread.id);
@@ -188,7 +193,7 @@ export default class DiplomacyHandler {
     }
 
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-    public static OnVoiceUpdate(oldState: VoiceState, newState: VoiceState) {
+    public static async OnVoiceUpdate(oldState: VoiceState, newState: VoiceState) {
         if (oldState.channel?.parentId != SettingsConstants.CATEGORIES.DIPLOMACY_ID) {
             return;
         }
@@ -198,9 +203,14 @@ export default class DiplomacyHandler {
         }
 
         try {
-            if (oldState.channel.members.size == 0) {
-                oldState.channel.delete();
+            console.log(oldState.channel.members.size);
+            if (oldState.channel.members.size > 0) {
+                return;
             }
+
+            await Utils.Sleep(1);
+
+            oldState.channel.delete();
 
             LogService.Log(LogType.DiplomacyVoiceDelete, oldState.member.id, 'Channel', oldState.channel.id);
         } catch (error) {
@@ -448,6 +458,72 @@ to lend their assistance in the relocation of ${name} to new land.`;
         } catch (error) {
             console.error(error);
             LogService.Error(LogType.DiplomacyTreaty, messageInfo.user.id, 'Thread', messageInfo.channel.id);
+        }
+    }
+
+    private static async OnJoin(messageInfo: IMessageInfo) {
+        try {
+            const interaction = messageInfo.interaction as ContextMenuCommandInteraction;
+
+            if (!interaction.inCachedGuild()) {
+                return;
+            }
+
+            if (interaction.channelId != SettingsConstants.CHANNELS.DIPLOMACY_DISPATCH_ID) {
+                interaction.reply({
+                    content: `Je kan deze actie alleen uitvoeren in <#${SettingsConstants.CHANNELS.DIPLOMACY_DISPATCH_ID}>.`,
+                    ephemeral: true
+                });
+                return;
+            }
+
+            const message = await (<TextChannel> messageInfo.channel).messages.fetch(interaction.targetId);
+            const embed = message.embeds[0];
+
+            if (embed == null) {
+                return;
+            }
+
+            const match = embed.description.match(/https:\/\/discord.com\/channels\/\d+?\/(\d+?)\/(\d+)/);
+            if (match == null) {
+                interaction.reply({
+                    content: 'Je kan deze actie niet op dit bericht uitvoeren.',
+                    ephemeral: true
+                });
+                return;
+            }
+
+            const threadChannel = <ThreadChannel> await DiscordService.FindChannelById(match[1]);
+            const starterMessage = await threadChannel.messages.fetch(match[2]);
+
+            if (starterMessage == null) {
+                interaction.reply({
+                    content: 'Er is iets fouts gegaan. Sorry.',
+                    ephemeral: true
+                });
+                return;
+            }
+
+            starterMessage.edit({
+                content: `${interaction.user}`
+            });
+
+            Utils.Sleep(.5);
+
+            starterMessage.edit({
+                content: ''
+            });
+
+            interaction.reply({
+                content: 'Je kan nu in de thread kijken.',
+                ephemeral: true
+            });
+
+            LogService.Log(LogType.DiplomacyPeek, messageInfo.user.id, 'Thread', threadChannel.id);
+        } catch (error) {
+            console.error(error);
+            LogService.Error(LogType.DiplomacyPeek, messageInfo.user.id, 'Message', messageInfo.message.id);
+            return;
         }
     }
 }

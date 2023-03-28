@@ -47,7 +47,8 @@ export default class SuggestionHandler {
                 return;
             }
 
-            const similarities = await SimilarityService.FindSimiliarThreads(thread, this.keyThreads, tags.data.tag == SettingsConstants.TAGS.UPGRADE_ART_ID);
+            const similarities = await SimilarityService.FindSimiliarThreads(thread, this.keyThreads, tags.data.tag == SettingsConstants.TAGS.UPGRADE_ART_ID,
+                VariableManager.Get(VariableKey.IdenticalSuggestion), VariableManager.Get(VariableKey.SimilarSuggestion));
 
             if (similarities.result && similarities.data.identical) {
                 await MessageService.ReplyEmbed(DiscordUtils.ParseMessageToInfo(message, message.author), SuggestionEmbeds.GetSuggestionDuplicateEmbed(similarities.data.thread));
@@ -155,11 +156,11 @@ export default class SuggestionHandler {
             }
 
             const reactions = starterMessage.reactions.cache;
-            const goodReaction = reactions.get(EmojiConstants.STATUS.GOOD);
-            const badReaction = reactions.get(EmojiConstants.STATUS.BAD);
+            const goodReaction = reactions.get(SettingsConstants.EMOJI.UPVOTE_ID);
+            const badReaction = reactions.get(SettingsConstants.EMOJI.DOWNVOTE_ID);
 
             const goodReactionCount = goodReaction.count;
-            const badReactionCount = goodReaction.count;
+            const badReactionCount = badReaction.count;
             const ratio = goodReactionCount / (goodReactionCount + badReactionCount);
 
             if (goodReaction.count >= VariableManager.Get(VariableKey.GoodAmount)) {
